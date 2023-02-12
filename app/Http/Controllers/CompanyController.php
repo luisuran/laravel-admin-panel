@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
-use Illuminate\Support\Facades\Log;
+use App\Services\CompanyService;
 
 class CompanyController extends Controller
 {
+    protected $companyService;
+
+    public function __construct(CompanyService $companyService)
+    {
+        $this->companyService = $companyService;
+    }
+
     public function index()
     {
         $companies = Company::all();
@@ -27,7 +34,7 @@ class CompanyController extends Controller
         Company::create([
             'name' => $request->name,
             'email' => $request->email,
-            'logo' => $request->logo ? $this->storeLogo($request->logo) : null,
+            'logo' => $request->logo ? $this->companyService->storeLogo($request->logo) : null,
             'website' => $request->website ?? null
         ]);
 
@@ -51,7 +58,7 @@ class CompanyController extends Controller
         $company->update([
             'name' => $request->name,
             'email' => $request->email,
-            'logo' => $request->logo ? $this->storeLogo($request->logo) : $company->logo,
+            'logo' => $request->logo ? $this->companyService->storeLogo($request->logo) : $company->logo,
             'website' => $request->website ?? null
         ]);
 
@@ -63,14 +70,5 @@ class CompanyController extends Controller
         $company->delete();
 
         return redirect()->route('companies.index');
-    }
-
-    private function storeLogo($logo)
-    {
-        $logoName = time() . '.' . $logo->extension();
-
-        $logo->move(public_path('storage'), $logoName);
-
-        return $logoName;
     }
 }

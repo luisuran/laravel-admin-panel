@@ -15,7 +15,7 @@ class StoreCompanyRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string',
-            'email' => 'required|unique:companies,email,' . $this->id,
+            'email' => 'required|email|unique:companies,email,' . $this->id,
             'logo' => 'image|dimensions:min_width=100,min_height=100|mimes:jpg,png,jpeg',
             'website' => 'nullable|url',
         ];

@@ -15,11 +15,11 @@
                     <table id="companies" class="table">
                         <thead>
                             <tr>
-                                <th>Company Name</th>
-                                <th>Company Email</th>
-                                <th>Company Website</th>
-                                <th>Company Logo</th>
-                                <th>Company Actions</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Website</th>
+                                <th>Logo</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>

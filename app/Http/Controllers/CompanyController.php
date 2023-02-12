@@ -2,84 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $companies = Company::all();
+
+        return view('companies.index', compact('companies'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('companies.create'); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        //
+        $request->validated();
+
+        Company::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'logo' => $request->logo ? $this->storeLogo($request->logo) : null,
+            'website' => $request->website ?? null
+        ]);
+
+        return redirect()->route('companies.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
-     */
     public function show(Company $company)
     {
-        //
+        return view('companies.show', compact('company'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Company $company)
     {
-        //
+        return view('companies.edit', compact('company'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Company $company)
+    public function update(StoreCompanyRequest $request, Company $company)
     {
-        //
+        $request->validated();
+
+        $company->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'logo' => $request->logo ? $this->storeLogo($request->logo) : $company->logo,
+            'website' => $request->website ?? null
+        ]);
+
+        return redirect()->route('companies.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Company $company)
     {
-        //
+        $company->delete();
+
+        return redirect()->route('companies.index');
+    }
+
+    private function storeLogo($logo)
+    {
+        $logoName = time() . '.' . $logo->extension();
+
+        $logo->move(public_path('storage'), $logoName);
+
+        return $logoName;
     }
 }

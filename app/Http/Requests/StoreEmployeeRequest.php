@@ -13,12 +13,18 @@ class StoreEmployeeRequest extends FormRequest
 
     public function rules()
     {
-        return [
+        $rules = [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'company_id' => 'required|exists:companies,id',
             'email' => 'required|email|unique:employees,email,' . $this->id,
             'phone' => 'nullable|string'
         ];
+
+        if ($this->method() === 'PATCH') {
+            $rules['email'] = 'required|unique:employees,email,' . $this->employee->id;
+        };
+
+        return $rules;
     }
 }

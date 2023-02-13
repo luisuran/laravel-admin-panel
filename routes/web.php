@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Company routes
+    Route::get('/companies/data-table', [CompanyController::class, 'indexDataTable'])->name('companies.data-table');
     Route::resource('/companies', CompanyController::class);
 
     // Employee routes

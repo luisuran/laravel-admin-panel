@@ -15,6 +15,7 @@
                     <table id="companies" class="table">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Website</th>
@@ -22,27 +23,6 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($companies as $company)
-                                <tr>
-                                    <td>{{ $company->name }}</td>
-                                    <td>{{ $company->email }}</td>
-                                    <td>{{ $company->website }}</td>
-                                    <td><img src="{{ $company->logo ? asset('storage/' . $company->logo) : asset('storage/default_logo.png') }}" alt="Company Logo" width="50" height="50"></td>
-                                    <td>
-                                        <div class="flex space-x-4">
-                                            <a href="{{ route('companies.show', $company->id) }}" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">View</a>
-                                            <a href="{{ route('companies.edit', $company->id) }}" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">Edit</a>
-                                            <form action="{{ route('companies.destroy', $company->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -53,7 +33,22 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
         <script>
             $(document).ready( function () {
-                $('#companies').DataTable();
+                $('#companies').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('companies.data-table') }}",
+                    columns: [
+                        { data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        { data: 'name', name: 'name' },
+                        { data: 'email', name: 'email' },
+                        { data: 'website', name: 'website' },
+                        { data: 'logo', name: 'logo', render: function(data, type, full, meta) {
+                            return "<img src='storage/" + data + "' alt=\"No Logo\" width=\"50\" height=\"50\">";
+                        }
+                        },
+                        { data: 'action', name: 'action', orderable: false, searchable: false }
+                    ]
+                });
             } );
         </script>
     @endsection

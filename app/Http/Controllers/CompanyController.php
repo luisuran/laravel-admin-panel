@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
 use App\Services\CompanyService;
+use DataTables;
 
 class CompanyController extends Controller
 {
@@ -20,6 +21,29 @@ class CompanyController extends Controller
         $companies = Company::all();
 
         return view('companies.index', compact('companies'));
+    }
+
+    public function indexDataTable()
+    {
+        $companies = Company::all();
+
+        return DataTables::of($companies)
+            ->addIndexColumn()
+            ->addColumn('action', function($row) {
+                $btn = '<div class="flex space-x-4">';
+                $btn .= '<a href="'.route('companies.show', $row->id).'" class="bg-gray-450 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">View</a>';
+                $btn .= '<a href="'.route('companies.edit', $row->id).'" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">Edit</a>';
+                $btn .= '<form action="'.route('companies.destroy', $row->id).'" method="POST">';
+                $btn .= csrf_field();
+                $btn .= method_field('DELETE');
+                $btn .= '<button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">Delete</button>';
+                $btn .= '</form>';
+                $btn .= '</div>';
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function create()

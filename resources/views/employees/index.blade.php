@@ -15,6 +15,7 @@
                     <table id="employees" class="table">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Company</th>
@@ -23,28 +24,6 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($employees as $employee)
-                                <tr>
-                                    <td>{{ $employee->first_name }}</td>
-                                    <td>{{ $employee->last_name }}</td>
-                                    <td>{{ $employee->company->name }}</td>
-                                    <td>{{ $employee->email }}</td>
-                                    <td>{{ $employee->phone }}</td>
-                                    <td>
-                                        <div class="flex space-x-4">
-                                            <a href="{{ route('employees.show', $employee->id) }}" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">View</a>
-                                            <a href="{{ route('employees.edit', $employee->id) }}" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">Edit</a>
-                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -55,8 +34,21 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
         <script>
             $(document).ready( function () {
-                $('#employees').DataTable();
-            } );
+                $('#employees').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('employees.data-table') }}",
+                    columns: [
+                        { data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        { data: 'first_name', name: 'first_name' },
+                        { data: 'last_name', name: 'last_name' },
+                        { data: 'company.name', name: 'company.name' },
+                        { data: 'email', name: 'email' },
+                        { data: 'phone', name: 'phone' },
+                        { data: 'action', name: 'action', orderable: false, searchable: false }
+                    ]
+                });
+            });
         </script>
     @endsection
 </x-app-layout>

@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/companies', CompanyController::class);
 
     // Employee routes
+    Route::get('/employees/data-table', [EmployeeController::class, 'indexDataTable'])->name('employees.data-table');
     Route::resource('/employees', EmployeeController::class);
 });
 

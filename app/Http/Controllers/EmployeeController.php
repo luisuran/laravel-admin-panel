@@ -24,8 +24,8 @@ class EmployeeController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="flex space-x-4">';
-                    $btn .= '<a href="' . route('employees.show', $row->id) . '" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">View</a>';
-                    $btn .= '<a href="' . route('employees.edit', $row->id) . '" class="bg-gray-400 hover:bg-gray-500 text-white font-medium py-1 px-3 rounded">Edit</a>';
+                    $btn .= '<a href="' . route('employees.show', $row->id) . '" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">View</a>';
+                    $btn .= '<a href="' . route('employees.edit', $row->id) . '" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">Edit</a>';
                     $btn .= '<form action="' . route('employees.destroy', $row->id) . '" method="POST">';
                     $btn .= csrf_field();
                     $btn .= method_field('DELETE');

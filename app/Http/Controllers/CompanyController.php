@@ -36,7 +36,7 @@ class CompanyController extends Controller
                 $btn .= '<form action="'.route('companies.destroy', $row->id).'" method="POST">';
                 $btn .= csrf_field();
                 $btn .= method_field('DELETE');
-                $btn .= '<button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">Delete</button>';
+                $btn .= '<button onclick="return confirm(\'Are you sure?\')" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-1 px-3 rounded">Delete</button>';
                 $btn .= '</form>';
                 $btn .= '</div>';
 
